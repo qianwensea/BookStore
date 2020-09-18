@@ -40,8 +40,6 @@ public class OrderServiceImpl implements OrderService {
             //保存订单项到数据库
             orderItemDao.saveOrderItem(orderItem);
 
-            int i = 10/0;
-
             //更新book的销量和库存
             Book book = bookdao.queryBookById(cartItem.getId());
             book.setSales(book.getSales() + cartItem.getCount());

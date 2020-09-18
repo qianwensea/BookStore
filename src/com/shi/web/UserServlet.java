@@ -1,5 +1,6 @@
 package com.shi.web;
 
+import com.google.gson.Gson;
 import com.shi.pojo.User;
 import com.shi.service.UserService;
 import com.shi.service.impl.UserServicImpl;
@@ -11,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.google.code.kaptcha.Constants.KAPTCHA_SESSION_KEY;
 
@@ -111,9 +114,29 @@ public class UserServlet extends BaseServlet {
      * @throws IOException
      */
     protected void logout(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //1.销毁sessio中的用户登录信息(或销毁sessio)
+        //1.销毁sessio中的用户登录信息(或销毁session)
         req.getSession().invalidate();
         //2.重定向到首页
         resp.sendRedirect(req.getContextPath());
+    }
+
+    /**
+     *
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+     */
+    protected void ajaxExistsUsername(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //获取请求参数username
+        String username = req.getParameter("username");
+        //调用UserService.exitsUsername
+        boolean exitsUsername = userService.exitsUsername(username);
+        //把返回的结果封装成为map对象
+        Map<String,Object> resultMap = new HashMap<>();
+        resultMap.put("exitsUsername",exitsUsername);
+        Gson gson = new Gson();
+        String json = gson.toJson(resultMap);
+        resp.getWriter().write(json);
     }
 }

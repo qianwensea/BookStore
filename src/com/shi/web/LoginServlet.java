@@ -19,6 +19,7 @@ public class LoginServlet extends HttpServlet {
 
     private UserService userService = new UserServicImpl();
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //1.获取输入信息
         String username = request.getParameter("username");

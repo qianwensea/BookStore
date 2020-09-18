@@ -11,7 +11,6 @@
 		text-align: center;
 		margin-top: 200px;
 	}
-	
 	h1 a {
 		color:red;
 	}

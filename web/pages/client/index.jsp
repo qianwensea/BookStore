@@ -12,7 +12,27 @@
 			//给加入购物车按钮绑定单击事件
 			$("button.addToCart").click(function () {
 				var bookId = $(this).attr("bookId");
-				location.href = "${basePath}cartServlet?action=addItem&id=" + bookId;
+				<%--location.href = "${basePath}cartServlet?action=addItem&id=" + bookId;--%>
+
+				//使用ajax请求处理
+				$.getJSON("${basePath}cartServlet","action=ajaxAddItem&id=" + bookId,function (data){
+					console.log(data);
+					$("#cartTotal").text("您的购物车中有" + data.totalCount + "件商品")
+					$("#cartLastName").text(data.lastName);
+				});
+			})
+
+			//跳到指定的页码
+			$("#searchPageButton").click(function () {
+				var pageNo = $("#pn_input").val();
+				if (pageNo < 1 || pageNo > ${requestScope.page.pageTotal}){
+					alert("该页面不存在!");
+					return false;
+				}
+				//javascript语言提供了一个location地址栏对象
+				//它有一个属性叫 href.它可以获取浏览器地址栏中的地址
+				//href属性可读可写
+				location.href = "${pageScope.basePath}client/bookServlet?action=page&pageNo=" + pageNo;
 			})
 		})
 	</script>
@@ -52,13 +72,16 @@
 			<div style="text-align: center">
 				<c:if test="${empty sessionScope.cart.items}">
 					<%--购物车为空的输出--%>
-					<span style="color: red">当前购物车为空</span>
+					<span id="cartTotal"></span>
+					<div>
+						<span style="color: red" id="cartLastName">当前购物车为空</span>
+					</div>
 				</c:if>
 				<c:if test="${not empty sessionScope.cart.items}">
 					<%--购物车非空的输出--%>
-					<span>您的购物车中有${sessionScope.cart.totalCount}件商品</span>
+					<span id="cartTotal">您的购物车中有${sessionScope.cart.totalCount}件商品</span>
 					<div>
-						您刚刚将<span style="color: red">${sessionScope.lastName}</span>加入到了购物车中
+						您刚刚将<span style="color: red" id="cartLastName">${sessionScope.lastName}</span>加入到了购物车中
 					</div>
 				</c:if>
 			</div>

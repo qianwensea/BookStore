@@ -10,6 +10,19 @@
 		<script type="text/javascript">
 		$(function () {
 
+			$("#username").blur(function (){
+				//1.获取用户名
+				var username = this.value;
+				//2.发起ajax请求
+				$.getJSON("${basePath}userServlet","action=ajaxExistsUsername&username=" + username,function (data){
+					if (data.exitsUsername == true){
+						$("span.errorMsg").text("用户名已存在!");
+					}else{
+						$("span.errorMsg").text("用户名可用!");
+					}
+				})
+			})
+
 			//给验证码的图片绑定单击事件
 			$("#code_img").click(function () {
 				//在事件响应的function函数中有一个this对象,这个this对象时当前正在响应事件的dom对象

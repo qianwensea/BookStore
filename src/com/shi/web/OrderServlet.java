@@ -39,7 +39,7 @@ public class OrderServlet extends BaseServlet{
         Integer id = loginUser.getId();
 
         //生成订单
-        String orderId = orderId = orderService.createOder(cart, id);
+        String orderId = orderService.createOder(cart, id);
 
         req.getSession().setAttribute("orderId",orderId);
 

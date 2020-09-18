@@ -82,12 +82,12 @@
     </filter-mapping>
 
     <!--  error-page标签配置,服务器出错之后,自动跳转的页面      -->
-    <error-page>
-        <!--   error-code 表示错误类型     -->
-        <error-code>500</error-code>
-        <!--  location 表示要跳转的页面路径      -->
-        <location>/pages/error/error500.jsp</location>
-    </error-page>
+<!--    <error-page>-->
+<!--        &lt;!&ndash;   error-code 表示错误类型     &ndash;&gt;-->
+<!--        <error-code>500</error-code>-->
+<!--        &lt;!&ndash;  location 表示要跳转的页面路径      &ndash;&gt;-->
+<!--        <location>/pages/error/error500.jsp</location>-->
+<!--    </error-page>-->
 
     <!--error-page 标签配置，服务器出错之后，自动跳转的页面-->
     <error-page>

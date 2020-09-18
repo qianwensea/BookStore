@@ -1,5 +1,6 @@
 package com.shi.web;
 
+import com.google.gson.Gson;
 import com.shi.pojo.Book;
 import com.shi.pojo.Cart;
 import com.shi.pojo.CartItems;
@@ -11,6 +12,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author 千文sea
@@ -28,6 +31,7 @@ public class CartServlet extends BaseServlet {
      * @throws ServletException
      * @throws IOException
      */
+    @Deprecated
     protected void addItem(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         //获取请求的参数商品编号
@@ -50,6 +54,42 @@ public class CartServlet extends BaseServlet {
         //重定向回商品列表页面
         //在http协议中有一个请求头,叫Refer,它可以把浏览器的地址栏的地址发给服务器
         resp.sendRedirect(req.getHeader("Referer"));
+    }
+
+    /**
+     * 使用ajax处理加入购物车
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+     */
+    protected void ajaxAddItem(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //获取请求的参数商品编号
+        int id = WebUtils.parseInt(req.getParameter("id"), 0);
+        //调用bookService.queryBookById(id) :book
+        Book book = bookService.queryBookById(id);
+        // 把图书信息,转换成cartItem商品项
+        CartItems cartItem = new CartItems(book.getId(), book.getName(), 1, book.getPrice(), book.getPrice());
+        //调用Cart.addItem(cartItem);添加商品项
+        //将购物车信息保存到session中
+        Cart cart = (Cart) req.getSession().getAttribute("cart");
+        if (cart == null) {
+            cart = new Cart();
+            req.getSession().setAttribute("cart", cart);
+        }
+        cart.addItem(cartItem);
+
+        req.getSession().setAttribute("lastName",cartItem.getName());
+
+        //6、返回购物车总的商品数量和最后一个添加的商品名称
+        Map<String,Object> resultMap = new HashMap<>();
+
+        resultMap.put("totalCount",cart.getTotalCount());
+        resultMap.put("lastName",cartItem.getName());
+        Gson gson = new Gson();
+        String resultMapToJson = gson.toJson(resultMap);
+        resp.getWriter().write(resultMapToJson);
+
     }
 
     /**
